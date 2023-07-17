@@ -63,6 +63,7 @@ class Graph:
     def kruskal(self):
         parent = {}  # Dictionary to store the parent of each vertex for finding cycles
         rank = {}  # Dictionary to store the rank of each vertex for union by rank
+        mst_cost = 0
         
         for vertex in self.vertices:
             parent[vertex] = vertex
@@ -77,24 +78,21 @@ class Graph:
         minimum_spanning_tree = Graph()  # Graph to store the minimum spanning tree
         
         for edge in edges:
-            # print("For edge: " + str(edge))
-            start_vertex, end_vertex, weight = edge
-            
+            start_vertex, end_vertex, weight = edge            
             root1 = self.find(parent, start_vertex)
             root2 = self.find(parent, end_vertex)
-            # print("root 1: " + str(root1) + " rank: " + str(rank[root1]) + ", root 2: " + str(root2) + " rank: " + str(rank[root2]))
-
             
             if root1 != root2:  # If adding the edge does not form a cycle
                 if start_vertex not in minimum_spanning_tree.vertices:
                     minimum_spanning_tree.add_vertex(start_vertex)                
                 if end_vertex not in minimum_spanning_tree.vertices:
                     minimum_spanning_tree.add_vertex(end_vertex)
-                minimum_spanning_tree.add_edge(start_vertex, end_vertex, weight)                
+                minimum_spanning_tree.add_edge(start_vertex, end_vertex, weight)
+                mst_cost += weight                
                 
                 self.union(parent, rank, root1, root2)
         
-        return minimum_spanning_tree
+        return mst_cost, minimum_spanning_tree
     
 class MaxFlowGraph(Graph):
     def __init__(self):
